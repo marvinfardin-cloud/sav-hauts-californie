@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: sav-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: sav_user
+      POSTGRES_PASSWORD: sav_password
+      POSTGRES_DB: sav_hauts_californie
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sav_user -d sav_hauts_californie"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Optional: Mailhog for catching emails in development
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: sav-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025" # SMTP
+      - "8025:8025" # Web UI
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sav-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql://sav_user:sav_password@postgres:5432/sav_hauts_californie"
+      NEXT_PUBLIC_APP_URL: "http://localhost:3000"
+      NODE_ENV: "production"
+      SMTP_HOST: "mailhog"
+      SMTP_PORT: "1025"
+      SMTP_SECURE: "false"
+      EMAIL_FROM: "SAV Les Hauts de Californie <noreply@hauts-californie.fr>"
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
