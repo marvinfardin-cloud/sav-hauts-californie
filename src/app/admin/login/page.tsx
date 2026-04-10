@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { SHOP_NAME } from "@/lib/constants";
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,7 +24,7 @@ export default function AdminLoginPage() {
     setLoading(false);
 
     if (res.ok && data.success) {
-      router.push("/admin");
+      window.location.href = "http://72.62.168.154:3000/admin";
     } else {
       setError(data.error || "Erreur de connexion");
     }
