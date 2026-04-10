@@ -1,4 +1,5 @@
 import { PrismaClient, Statut, Role } from "../src/generated/prisma";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -14,11 +15,16 @@ async function main() {
   await prisma.client.deleteMany();
   await prisma.user.deleteMany();
 
+  // Hash passwords
+  const adminHash = await bcrypt.hash("Admin2024!", 12);
+  const techHash = await bcrypt.hash("Tech2024!", 12);
+
   // Create staff users
   const admin = await prisma.user.create({
     data: {
-      email: "admin@hauts-californie.fr",
-      nom: "Admin",
+      email: "zingzag10@hotmail.fr",
+      nom: "Administrateur",
+      passwordHash: adminHash,
       role: Role.ADMIN,
     },
   });
@@ -27,6 +33,7 @@ async function main() {
     data: {
       email: "jean.technicien@hauts-californie.fr",
       nom: "Jean Technicien",
+      passwordHash: techHash,
       role: Role.TECHNICIEN,
     },
   });
@@ -35,6 +42,7 @@ async function main() {
     data: {
       email: "marc.technicien@hauts-californie.fr",
       nom: "Marc Dubois",
+      passwordHash: techHash,
       role: Role.TECHNICIEN,
     },
   });
@@ -239,10 +247,10 @@ async function main() {
   console.log("✅ Created appointments");
   console.log("🎉 Seed completed successfully!");
   console.log("\n📋 Test credentials:");
-  console.log("   Admin: admin@hauts-californie.fr");
-  console.log("   Technicien 1: jean.technicien@hauts-californie.fr");
-  console.log("   Technicien 2: marc.technicien@hauts-californie.fr");
-  console.log("   Client: pierre.martin@example.com\n");
+  console.log("   Admin: zingzag10@hotmail.fr / Admin2024!");
+  console.log("   Technicien 1: jean.technicien@hauts-californie.fr / Tech2024!");
+  console.log("   Technicien 2: marc.technicien@hauts-californie.fr / Tech2024!");
+  console.log("   Client (magic link): pierre.martin@example.com\n");
 }
 
 main()

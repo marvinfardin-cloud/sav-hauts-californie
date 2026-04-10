@@ -83,12 +83,13 @@ model RendezVous {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  nom       String
-  role      Role     @default(TECHNICIEN)
-  tickets   Ticket[]
-  createdAt DateTime @default(now())
+  id           String   @id @default(cuid())
+  email        String   @unique
+  nom          String
+  passwordHash String
+  role         Role     @default(TECHNICIEN)
+  tickets      Ticket[]
+  createdAt    DateTime @default(now())
 }
 
 enum Role {

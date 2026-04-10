@@ -1,36 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { generateToken } from "@/lib/auth";
-import { sendStaffMagicLink } from "@/lib/email";
+import { createUserSession, setSessionCookie } from "@/lib/auth";
+import bcrypt from "bcryptjs";
 
 export async function POST(req: NextRequest) {
-  const { email } = await req.json();
+  const { email, password } = await req.json();
 
-  if (!email) {
-    return NextResponse.json({ error: "Email requis" }, { status: 400 });
+  if (!email || !password) {
+    return NextResponse.json({ error: "Email et mot de passe requis" }, { status: 400 });
   }
 
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
-    // Don't reveal that the user doesn't exist
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ error: "Email ou mot de passe incorrect" }, { status: 401 });
   }
 
-  const token = generateToken();
-  const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
-
-  await prisma.session.create({
-    data: { userId: user.id, token, expiresAt },
-  });
-
-  try {
-    await sendStaffMagicLink(email, token);
-  } catch (e) {
-    console.error("Failed to send email:", e);
-    if (process.env.NODE_ENV === "development") {
-      return NextResponse.json({ success: true, devToken: token });
-    }
+  const valid = await bcrypt.compare(password, user.passwordHash);
+  if (!valid) {
+    return NextResponse.json({ error: "Email ou mot de passe incorrect" }, { status: 401 });
   }
+
+  const token = await createUserSession(user.id);
+  await setSessionCookie(token, "admin_session_token");
 
   return NextResponse.json({ success: true });
 }

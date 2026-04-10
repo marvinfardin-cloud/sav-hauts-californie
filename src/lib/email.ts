@@ -55,25 +55,6 @@ export async function sendMagicLink(email: string, token: string) {
   });
 }
 
-export async function sendStaffMagicLink(email: string, token: string) {
-  const url = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/verify-staff?token=${token}`;
-  await transporter.sendMail({
-    from: FROM,
-    to: email,
-    subject: "Connexion Atelier - Les Hauts de Californie",
-    html: wrap(`
-      <p>Bonjour,</p>
-      <p>Cliquez sur le bouton ci-dessous pour accéder à l'interface atelier :</p>
-      <div style="text-align:center;margin:24px 0;">
-        <a href="${url}" style="background-color:#1e40af;color:white;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:bold;">
-          Accéder à l'atelier
-        </a>
-      </div>
-      <p style="font-size:13px;color:#6b7280;">Ce lien est valable 15 minutes.</p>
-    `),
-  });
-}
-
 const STATUT_LABELS: Record<string, string> = {
   RECU: "Reçu",
   DIAGNOSTIC: "En diagnostic",
