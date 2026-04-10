@@ -1,17 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
-  const cookieStore = await cookies();
   const isAdmin = req.nextUrl.searchParams.get("admin") === "true";
   const cookieName = isAdmin ? "admin_session_token" : "session_token";
-  const token = cookieStore.get(cookieName)?.value;
+  const token = req.cookies.get(cookieName)?.value;
 
   if (token) {
     await prisma.session.deleteMany({ where: { token } });
-    cookieStore.delete(cookieName);
   }
 
-  return NextResponse.json({ success: true });
+  // Clear the cookie on the response
+  const response = NextResponse.json({ success: true });
+  response.cookies.set(cookieName, "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 0,
+    path: "/",
+  });
+
+  return response;
 }

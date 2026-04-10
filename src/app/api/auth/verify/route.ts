@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { createClientSession, setSessionCookie } from "@/lib/auth";
+import { createClientSession } from "@/lib/auth";
 
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token");
@@ -20,7 +20,16 @@ export async function GET(req: NextRequest) {
 
   // Create a real session
   const sessionToken = await createClientSession(session.clientId);
-  await setSessionCookie(sessionToken);
 
-  return NextResponse.redirect(new URL("/client/dashboard", req.url));
+  // Set cookie directly on the redirect response
+  const response = NextResponse.redirect(new URL("/client/dashboard", req.url));
+  response.cookies.set("session_token", sessionToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    path: "/",
+  });
+
+  return response;
 }

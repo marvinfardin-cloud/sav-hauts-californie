@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { createUserSession, setSessionCookie } from "@/lib/auth";
+import { createUserSession } from "@/lib/auth";
 import bcrypt from "bcryptjs";
 
 export async function POST(req: NextRequest) {
@@ -20,8 +20,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Email ou mot de passe incorrect" }, { status: 401 });
   }
 
+  // Create session in database
   const token = await createUserSession(user.id);
-  await setSessionCookie(token, "admin_session_token");
 
-  return NextResponse.json({ success: true });
+  // Set cookie directly on the response so it's sent to the browser
+  const response = NextResponse.json({ success: true });
+  response.cookies.set("admin_session_token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    path: "/",
+  });
+
+  return response;
 }

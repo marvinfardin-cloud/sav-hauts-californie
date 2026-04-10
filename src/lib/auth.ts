@@ -64,15 +64,3 @@ export async function getUser() {
   const user = await prisma.user.findUnique({ where: { id: session.userId } });
   return user;
 }
-
-// Set the session cookie
-export async function setSessionCookie(token: string, name: string = "session_token") {
-  const cookieStore = await cookies();
-  cookieStore.set(name, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-    path: "/",
-  });
-}
