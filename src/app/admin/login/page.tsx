@@ -24,7 +24,7 @@ export default function AdminLoginPage() {
     setLoading(false);
 
     if (res.ok && data.success) {
-      window.location.href = "http://72.62.168.154:3000/admin";
+      window.location.href = "/admin";
     } else {
       setError(data.error || "Erreur de connexion");
     }
