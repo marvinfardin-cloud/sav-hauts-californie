@@ -65,7 +65,7 @@ export default function AdminDashboard() {
   }
 
   const formatTime = (d: string) =>
-    new Date(d).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+    new Date(d).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "America/Martinique" });
 
   const typeLabels: Record<string, string> = { depot: "Dépôt", retrait: "Retrait", diagnostic: "Diagnostic" };
 
