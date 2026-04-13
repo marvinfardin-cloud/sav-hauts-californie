@@ -68,7 +68,7 @@ export default function ClientRdvPage() {
   const minDate = tomorrow.toISOString().split("T")[0];
 
   const formatSlotTime = (iso: string) =>
-    new Date(iso).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+    new Date(iso).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "America/Martinique" });
 
   const formatRdvDate = (iso: string) =>
     new Date(iso).toLocaleDateString("fr-FR", {

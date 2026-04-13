@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
       for (const m of [0, 30]) {
         if (h === end - 1 && m === 30) continue; // Don't add last half-hour slot
         const slotDate = new Date(date);
-        slotDate.setUTCHours(h + 4, m, 0, 0);
+        slotDate.setUTCHours(h, m, 0, 0);
         // Only future slots
         if (slotDate > new Date()) {
           slots.push(slotDate.toISOString());
