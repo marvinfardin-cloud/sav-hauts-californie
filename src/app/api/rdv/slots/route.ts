@@ -43,7 +43,6 @@ export async function GET(req: NextRequest) {
   const MAX_PER_SLOT = 3;
   const available = slots.filter((slot) => {
     const count = existing.filter((rdv) => {
-      const rdvStr = rdv.dateHeure.toISOString().slice(0, 16);
       const rdvLocal = new Date(rdv.dateHeure);
       const localStr = `${dateStr}T${String(rdvLocal.getUTCHours()).padStart(2, "0")}:${String(rdvLocal.getUTCMinutes()).padStart(2, "0")}`;
       return localStr === slot;
