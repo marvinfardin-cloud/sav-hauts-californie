@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/Header";
 import StatusBadge from "@/components/StatusBadge";
+import ProgressBar from "@/components/ProgressBar";
 import Footer from "@/components/Footer";
 
 interface Ticket {
@@ -61,7 +62,7 @@ export default function ClientDashboard() {
       <Header type="client" userName={client ? `${client.prenom} ${client.nom}` : undefined} />
 
       <main className="flex-1 max-w-4xl mx-auto w-full px-4 py-6">
-        <h1 className="text-xl font-bold text-gray-900 mb-6">Mes réparations</h1>
+        <h1 className="text-xl font-bold text-gray-900 mb-6">Mes tickets</h1>
 
         {tickets.length === 0 ? (
           <div className="bg-white rounded-xl border border-gray-200 p-8 text-center">
@@ -88,20 +89,21 @@ export default function ClientDashboard() {
                           : "border-gray-200"
                       }`}
                     >
-                      <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start justify-between gap-3 mb-4">
                         <div className="min-w-0">
                           <p className="font-medium text-gray-900">{ticket.materiel}</p>
                           <p className="text-sm text-gray-500 mt-0.5">
                             {ticket.marque} {ticket.modele} — {ticket.numero}
                           </p>
-                          {ticket.statut === "PRET" && (
-                            <p className="text-sm text-green-700 font-medium mt-2">
-                              Votre matériel est prêt ! Venez le récupérer.
-                            </p>
-                          )}
                         </div>
                         <StatusBadge statut={ticket.statut} />
                       </div>
+                      <ProgressBar statut={ticket.statut} />
+                      {ticket.statut === "PRET" && (
+                        <p className="text-sm text-green-700 font-medium mt-3">
+                          Votre matériel est prêt ! Venez le récupérer.
+                        </p>
+                      )}
                     </Link>
                   ))}
                 </div>
@@ -120,7 +122,7 @@ export default function ClientDashboard() {
                       href={`/client/tickets/${ticket.id}`}
                       className="block bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md transition-shadow"
                     >
-                      <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start justify-between gap-3 mb-4">
                         <div className="min-w-0">
                           <p className="font-medium text-gray-900">{ticket.materiel}</p>
                           <p className="text-sm text-gray-500 mt-0.5">
@@ -129,6 +131,7 @@ export default function ClientDashboard() {
                         </div>
                         <StatusBadge statut={ticket.statut} />
                       </div>
+                      <ProgressBar statut={ticket.statut} />
                     </Link>
                   ))}
                 </div>

@@ -54,7 +54,10 @@ export default function Header({ type, userName }: HeaderProps) {
           {type === "client" && (
             <nav className="hidden md:flex items-center gap-1">
               <Link href="/client/dashboard" className="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md">
-                Mes réparations
+                Mes tickets
+              </Link>
+              <Link href="/client/messages" className="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md">
+                Messages
               </Link>
               <Link href="/client/rdv" className="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md">
                 Rendez-vous
@@ -95,7 +98,10 @@ export default function Header({ type, userName }: HeaderProps) {
           ) : (
             <>
               <Link href="/client/dashboard" className="px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-100 rounded-md whitespace-nowrap">
-                Mes réparations
+                Mes tickets
+              </Link>
+              <Link href="/client/messages" className="px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-100 rounded-md whitespace-nowrap">
+                Messages
               </Link>
               <Link href="/client/rdv" className="px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-100 rounded-md whitespace-nowrap">
                 Rendez-vous

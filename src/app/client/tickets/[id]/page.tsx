@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import StatusBadge from "@/components/StatusBadge";
+import ProgressBar from "@/components/ProgressBar";
 import Footer from "@/components/Footer";
 import { STATUT_CONFIG, StatutKey, SHOP_PHONE } from "@/lib/constants";
 
@@ -126,6 +127,10 @@ export default function ClientTicketDetail() {
               </p>
             </div>
             <StatusBadge statut={ticket.statut} />
+          </div>
+
+          <div className="mb-6 py-3">
+            <ProgressBar statut={ticket.statut} />
           </div>
 
           <div className="grid grid-cols-2 gap-4 text-sm">
